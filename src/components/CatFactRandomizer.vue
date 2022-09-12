@@ -17,7 +17,7 @@
 
         <button
           class="fact-randomizer__submit"
-          @click="loadFact"
+          @click="loadNewFact"
         >
           Read another one!
         </button>
@@ -29,33 +29,28 @@
 <script>
 import { loadFact } from '@/api/catFacts';
 
-export default {
-  data () {
-    return {
-      apiFact: null,
-      loading: false
-    };
-  },
+import {
+  computed,
+  defineComponent,
+  ref,
+  onMounted
+} from 'vue';
 
-  computed: {
-    factMessage () {
-      return this.apiFact?.fact;
-    }
-  },
+export default defineComponent({
+  setup () {
+    const apiFact = ref(null);
+    const loading = ref(false);
 
-  mounted () {
-    this.loadFact();
-  },
+    const factMessage = computed(() => apiFact.value?.fact);
 
-  methods: {
-    async loadFact () {
-      if (this.loading) {
+    const loadNewFact = async () => {
+      if (loading.value) {
         return;
       }
 
-      this.loading = true;
+      loading.value = true;
 
-      this.apiFact = null;
+      apiFact.value = null;
 
       const response = await loadFact();
 
@@ -63,12 +58,22 @@ export default {
       const forcedDelay = 500;
       await new Promise(resolve => setTimeout(resolve, forcedDelay));
 
-      this.apiFact = response.data;
+      apiFact.value = response?.data || null;
 
-      this.loading = false;
-    }
-  }
-}
+      loading.value = false;
+    };
+
+    onMounted(() => {
+      loadNewFact()
+    });
+
+    return {
+      apiFact,
+      factMessage,
+      loadNewFact
+    };
+  },
+});
 </script>
 
 <style lang="scss">
