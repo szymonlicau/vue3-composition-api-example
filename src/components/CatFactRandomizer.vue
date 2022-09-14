@@ -9,15 +9,13 @@
         v-if="apiFact"
         class="fact-randomizer__result"
       >
-        <blockquote
-          class="fact-randomizer__fact"
-        >
-          {{ factMessage }}
-        </blockquote>
+        <CatFact
+          :cat-fact="apiFact"
+        />
 
         <button
           class="fact-randomizer__submit"
-          @click="loadNewFact"
+          @click="onButtonClick"
         >
           Read another one!
         </button>
@@ -29,20 +27,33 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import CatFact from '@/components/CatFact.vue';
+
 import { useCatFacts } from '@/composables/catFacts';
 
 export default defineComponent({
-  setup () {
+  components: {
+    CatFact
+  },
+
+  emits: [ 'button-clicked' ],
+
+  setup (_, { emit }) {
     const {
       apiFact,
       factMessage,
       loadNewFact
     } = useCatFacts();
 
+    const onButtonClick = () => {
+      loadNewFact();
+
+      emit('button-clicked', factMessage.value);
+    };
+
     return {
       apiFact,
-      factMessage,
-      loadNewFact
+      onButtonClick
     };
   },
 });
@@ -68,10 +79,6 @@ export default defineComponent({
       opacity: 0;
       transform: scale(0) rotate(5deg);
     }
-  }
-
-  &__fact {
-    font-size: 1.8rem;
   }
 
   &__submit {
