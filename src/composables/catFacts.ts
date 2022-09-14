@@ -1,9 +1,10 @@
 import { loadFact } from '@/api/catFacts';
+import type { CatFact } from '@/api/catFacts';
 
 import { ref, computed, onMounted } from 'vue';
 
 export const useCatFacts = () => {
-  const apiFact = ref(null);
+  const apiFact = ref<CatFact | null>(null);
   const loading = ref(false);
 
   const factMessage = computed(() => apiFact.value?.fact);
@@ -23,7 +24,7 @@ export const useCatFacts = () => {
     const forcedDelay = 500;
     await new Promise(resolve => setTimeout(resolve, forcedDelay));
 
-    apiFact.value = response?.data || null;
+    apiFact.value = response.data || null;
 
     loading.value = false;
   };

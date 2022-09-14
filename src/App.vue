@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import CatFactRandomizer from '@/components/CatFactRandomizer.vue';
 
 export default {
