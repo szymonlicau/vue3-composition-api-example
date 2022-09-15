@@ -46,9 +46,9 @@ export default defineComponent({
     } = useCatFacts();
 
     const onButtonClick = () => {
-      loadNewFact();
-
       emit('button-clicked', factMessage.value);
+
+      loadNewFact();
     };
 
     return {
